@@ -1,38 +1,427 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>喵呜导图 - 让你的想法像猫咪一样灵活跳跃</title>
-  </head>
-  <body>
-    <div id="root"></div>
-  <ul className="mt-1.5 space-y-0.5">
-	<li className="flex items-center gap-2"><span className="inline-flex items-center justify-center rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono">Tab</span><span>添加子级节点</span>
-	</li>
-	<li className="flex items-center gap-2"><span className="inline-flex items-center justify-center rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono">Shift+Tab</span><span>添加同级节点 / 根节点左侧添加一级节点</span>
-	</li>
-	<li className="flex items-center gap-2"><span className="inline-flex items-center justify-center rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono">Enter</span><span>编辑文本</span>
-	</li>
-	<li className="flex items-center gap-2"><span className="inline-flex items-center justify-center rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono">Del</span><span>删除选中节点</span>
-	</li>
-	<li className="flex items-center gap-2"><span className="inline-flex items-center justify-center rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono">↑ ↓ ← →</span><span>切换选中节点</span>
-	</li>
-	<li className="flex items-center gap-2"><span className="inline-flex items-center justify-center rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono">Ctrl+c/x/v</span><span>复制/剪切/粘贴</span>
-	</li>
-	<li className="flex items-center gap-2"><span className="inline-flex items-center justify-center rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono">Ctrl+z</span><span>撤销</span>   <span className="inline-flex items-center justify-center ml-5 rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono">Ctrl+y</span><span>重做</span>
-	</li>
-	<li className="flex items-center gap-2"><span className="inline-flex items-center justify-center rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono">滚轮</span><span>缩放画布</span>
-	</li>
-	<li className="flex items-center gap-2"><span className="inline-flex items-center justify-center rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono">左键</span><span>选中、移动单个节点</span>
-	</li>
-	<li className="flex items-center gap-2"><span className="inline-flex items-center justify-center rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono">画布按下中键</span><span>移动画布</span>
-	</li>
-	<li className="flex items-center gap-2"><span className="inline-flex items-center justify-center rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono">节点按下中键</span><span>拖动节点及其后代</span>
-	</li>
-	<li className="flex items-center gap-2"><span className="inline-flex items-center justify-center rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono border border-border">100%</span><span>双击缩放比例框，恢复画布比例</span>
-	</li>
-  </ul>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MeowMind 喵呜导图 (v2.8.0)</title>
+<meta name="description" content="MeowMind 喵呜导图 —— 轻巧、免费、无需注册的思维导图工具。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230A1526'/><path d='M8 13.5V7l5 3.6c2.6-1 5.4-1 8 0L26 7v6.5c2.3 2.2 3.5 4.9 3.5 7.5 0 5.5-4.9 9-12.5 9S4.5 26.5 4.5 21c0-2.6 1.2-5.3 3.5-7.5z' fill='%23FFB13D'/><circle cx='12.8' cy='19.2' r='1.7' fill='%230A1526'/><circle cx='19.2' cy='19.2' r='1.7' fill='%230A1526'/></svg>">
+<style>
+/* ========== Reset & Tokens ========== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink-900:#0A1526;
+  --blue-500:#2F6BFF;
+  --amber-400:#FFB13D;--amber-500:#F49A16;--amber-600:#C77E12;
+  --cream-100:#F8F1DC;--cream-line:#DFD0A4;
+  --paper:#FFFFFF;
+  --text:#1C2A44;--sub:#5A6A85;--line:#DDE6F2;
+  --mono:"Cascadia Code","SF Mono",Consolas,"Courier New",monospace;
+  --font-body:-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Segoe UI","Noto Sans SC",sans-serif;
+  --shadow-card:0 2px 12px rgba(16,32,64,.07);
+  --shadow-win:0 34px 90px -22px rgba(5,13,28,.6),0 6px 22px rgba(5,13,28,.22);
+}
+html{scroll-behavior:smooth;scroll-padding-top:88px}
+body{font-family:var(--font-body);color:var(--text);line-height:1.7;background:var(--paper);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img,svg{display:block}
+a{text-decoration:none;color:inherit}
+:focus-visible{outline:2px solid var(--amber-400);outline-offset:2px;border-radius:4px}
+.container{max-width:1160px;margin:0 auto;padding:0 32px}
+
+/* ========== Nav ========== */
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;background:rgba(10,21,38,.74);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.08)}
+.nav .container{height:100%;display:flex;align-items:center;gap:36px}
+.brand{display:flex;align-items:center;gap:10px;color:#fff;font-size:18px;font-weight:700;letter-spacing:.02em}
+.brand img{width:30px;height:30px;object-fit:contain}
+.nav-links{display:flex;gap:28px;margin-left:auto}
+.nav-links a{color:rgba(233,240,255,.72);font-size:14px;transition:color .2s}
+.nav-links a:hover{color:#fff}
+
+/* ========== Hero ========== */
+.hero{position:relative;padding:80px 0 128px;color:#fff;background:
+  radial-gradient(680px 420px at 86% 14%,rgba(255,177,61,.15),transparent 62%),
+  radial-gradient(900px 560px at -12% 100%,rgba(47,107,255,.24),transparent 62%),
+  linear-gradient(135deg,#0A1526 0%,#10234A 48%,#173B78 100%);overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.055) 1px,transparent 1.4px);background-size:26px 26px;pointer-events:none}
+.hero .container{position:relative;z-index:2;display:grid;grid-template-columns:1.02fr .98fr;gap:56px;align-items:center}
+.hero h1{font-size:clamp(20px,7vw,47px);font-weight:800;line-height:1.28;letter-spacing:.01em;margin:22px 0 18px;white-space:nowrap}
+.hero h2 .hl{color:var(--amber-400);position:relative}
+.hero-sub{font-size:15.5px;line-height:1.95;color:rgba(230,238,252,.82);width:100%;max-width:none;margin-top: 20px;margin-left:auto;margin-right:auto;text-align:left}
+.btn-row{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;margin:30px 0 26px}
+.btn-primary{display:inline-flex;flex-direction:column;align-items:center;gap:2px;background:linear-gradient(180deg,var(--amber-400),var(--amber-500));color:#221604;border-radius:13px;padding:13px 30px;box-shadow:0 12px 34px rgba(255,160,40,.35);transition:transform .22s,box-shadow .22s}
+.btn-primary b{font-size:16.5px;font-weight:800}
+.btn-primary i{font-style:normal;font-size:12px;font-weight:600;color:rgba(34,22,4,.75);font-family:var(--mono)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 18px 44px rgba(255,160,40,.45)}
+.btn-ghost{display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(255,255,255,.3);color:rgba(255,255,255,.92);border-radius:13px;padding:15px 28px;font-size:14.5px;transition:background .2s,border-color .2s}
+.btn-ghost:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.5)}
+.btn-ghost svg{width:14px;height:14px}
+.trust{display:flex;flex-wrap:wrap;justify-content:center;gap:20px}
+.trust span{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:rgba(230,238,252,.72)}
+.trust svg{width:15px;height:15px;color:var(--amber-400);flex:none}
+.hero-copy>*{animation:heroUp .75s cubic-bezier(.3,.8,.3,1) both}
+.hero-copy>*:nth-child(2){animation-delay:.08s}
+.hero-copy>*:nth-child(3){animation-delay:.16s}
+.hero-copy>*:nth-child(4){animation-delay:.24s}
+.hero-copy>*:nth-child(5){animation-delay:.32s}
+@keyframes heroUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+/* ---------- 软件截图动画 ---------- */
+.shot{position:relative;display:flex;align-items:center;justify-content:center}
+.shot::before{content:"";position:absolute;inset:8% 4% -2% 4%;background:radial-gradient(closest-side,rgba(90,141,255,.4),transparent 75%);filter:blur(8px);z-index:0}
+.win{position:relative;z-index:1;background:#FDFDFE;border-radius:8px;overflow:hidden;box-shadow:var(--shadow-win),0 0 0 1px rgba(255,255,255,.16);animation:winIn .9s cubic-bezier(.3,.8,.3,1) both}
+@keyframes winIn{from{opacity:0;transform:translateY(22px) scale(.985)}to{opacity:1;transform:none}}
+
+
+/* ========== 区块通用 ========== */
+section.sec{padding:96px 0;position:relative}
+.sec-head{margin-bottom:44px}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.22em;color:var(--amber-600)}
+.eyebrow::before{content:"";width:22px;height:2.5px;background:var(--amber-400);border-radius:2px}
+.sec-head h2{font-size:clamp(25px,2.8vw,33px);font-weight:800;line-height:1.35;color:var(--text);margin:14px 0 12px;letter-spacing:.01em}
+.sec-head .paragraph{font-size:15px;color:var(--sub);line-height:1.9;width:100%;max-width:none}
+
+/* ========== 功能特性 ========== */
+#features{background:
+  radial-gradient(720px 360px at 92% -12%,rgba(47,107,255,.055),transparent 62%),
+  linear-gradient(180deg,#FFFFFF 0%,#FCFDFF 62%,#F9FBFF 100%)}
+.feat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-card);transition:transform .25s,box-shadow .25s,border-color .25s}
+.feat-grid .card{padding:24px 22px}
+.feat-grid .card:hover{transform:translateY(-4px);border-color:#B9CDF6;box-shadow:0 18px 40px -14px rgba(23,51,95,.22)}
+.f-ic{display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:11px;background:linear-gradient(180deg,#EDF3FF,#DFE9FC);color:var(--blue-500)}
+.f-ic svg{width:21px;height:21px}
+.feat-grid h3{font-size:16px;font-weight:700;color:var(--text);margin:16px 0 8px}
+.feat-grid .card p{font-size:13.5px;line-height:1.8;color:var(--sub)}
+.f-keys{display:flex-inline;flex-wrap:wrap;gap:6px;margin-top:12px}
+.f-keys kbd{font-family:var(--mono);font-size:11px;font-weight:600;color:#3A4C6E;background:#F2F6FD;border:1px solid #D4DFF1;border-bottom-width:2.5px;border-radius:6px;padding:2px 7px}
+
+/* ========== 使用场景 ========== */
+#scenarios{background:
+  radial-gradient(760px 400px at 88% 0%,rgba(255,177,61,.08),transparent 62%),
+  radial-gradient(720px 420px at -4% 100%,rgba(47,107,255,.07),transparent 62%),
+  linear-gradient(180deg,#F7FAFF 0%,#F1F6FD 55%,#EAF1FB 100%);
+  border-top:1px solid rgba(23,51,95,.06);border-bottom:1px solid rgba(23,51,95,.06)}
+.sc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.sc-grid .card{overflow:hidden;display:flex;flex-direction:column;transition:transform .25s,box-shadow .25s,border-color .25s}
+.sc-grid .card:hover{transform:translateY(-4px);border-color:#C8D8F4;box-shadow:0 20px 44px -16px rgba(23,51,95,.24)}
+.sc-map{background:var(--cream-100);background-image:radial-gradient(rgba(28,42,68,.1) 1px,transparent 1.3px);background-size:20px 20px;border-bottom:1px solid var(--cream-line);padding:16px 14px 8px}
+.sc-map svg{width:100%;height:auto}
+.sc-body{padding:20px 22px 24px}
+.sc-body h3{font-size:16px;line-height:1.5;color:var(--text);margin-bottom:9px}
+.sc-body h3 b{font-weight:800}
+.sc-body h3 .sc-bar{color:#C3CFE2;font-weight:400;margin:0 6px}
+.sc-body h3 .sc-tag{color:var(--sub);font-weight:500;font-size:14px}
+.sc-body p{font-size:13.5px;line-height:1.85;color:var(--sub)}
+.sc-map text{font-family:var(--font-body)}
+
+/* ========== 快捷键 ========== */
+#shortcuts{background:linear-gradient(180deg,#FDFEFF 0%,#F6FAFE 100%)}
+.kbd-panel{border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow-card)}
+table.table{width:100%;border-collapse:collapse}
+table.table th{background:linear-gradient(180deg,#F0F5FD,#EAF0FA);color:#33445F;font-size:13.5px;font-weight:700;text-align:left;padding:13px 24px;border-bottom:1px solid var(--line)}
+table.table th:first-child{width:40%}
+table.table td{padding:12.5px 24px;border-bottom:1px solid #ECF1F8;font-size:14px;color:#33445F}
+table.table tr:last-child td{border-bottom:0}
+table.table tbody tr:hover{background:#f6efe6}
+table.table td .keys{display:flex;flex-wrap:wrap;align-items:center;gap:5px}
+kbd.k{font-family:var(--mono);font-size:12.5px;font-weight:700;color:#2A3A57;background:#fff;border:1px solid #C6D3E8;border-bottom-width:3px;border-radius:6px;padding:3px 9px;min-width:26px;text-align:center;display:inline-block}
+.keys i{font-style:normal;color:#A7B4C9;font-size:12px}
+
+/* ========== CTA / 尾页 ========== */
+.cta{position:relative;overflow:hidden;color:#fff;padding:110px 0 118px;text-align:center;background:
+  radial-gradient(760px 400px at 82% 110%,rgba(255,177,61,.16),transparent 62%),
+  radial-gradient(700px 420px at 8% -20%,rgba(47,107,255,.28),transparent 60%),
+  linear-gradient(135deg,#0A1526 0%,#112550 55%,#173B78 100%)}
+.cta::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1.4px);background-size:26px 26px}
+.cta-cat{position:absolute;right:-52px;bottom:-58px;width:330px;height:330px;opacity:.07;pointer-events:none}
+.cta .container{position:relative;z-index:2}
+.cta h2{font-size:clamp(27px,3.2vw,37px);font-weight:800;letter-spacing:.01em}
+.cta .btn-primary{padding:15px 40px;margin-top: 30px;}
+
+/* ========== Footer ========== */
+.site-foot{background:var(--ink-900);color:rgba(230,238,252,.66);text-align:center;padding:42px 24px 46px}
+.f-brand{display:inline-flex;align-items:center;gap:9px;color:#fff;font-size:16px;font-weight:700;margin-bottom:12px}
+.f-brand img{width:24px;height:24px;object-fit:contain}
+.site-foot p{font-size:13px;line-height:2}
+.f-meta{font-family:var(--mono);font-size:11.5px;color:rgba(230,238,252,.4);letter-spacing:.03em}
+
+/* ========== 滚动显现（JS 渐进增强） ========== */
+html.js .rv{opacity:0;transform:translateY(18px);transition:opacity .7s cubic-bezier(.3,.8,.3,1),transform .7s cubic-bezier(.3,.8,.3,1);transition-delay:var(--rd,0s)}
+html.js .rv.in{opacity:1;transform:none}
+
+/* ========== 响应式 ========== */
+@media screen{
+  .hero .container{max-width:none;width:100%;align-items:center}
+  .hero{min-height:100vh;display:flex;align-items:center;padding:80px 0}
+  .hero-copy,.shot{justify-self:center;width:100%;max-width:680px}
+}
+@media screen and (max-width:1080px){
+  .feat-grid{grid-template-columns:repeat(2,1fr)}
+  .sc-grid{grid-template-columns:1fr;max-width:560px;margin:0 auto}
+  .hero .container{grid-template-columns:1fr;gap:52px}
+  .hero{padding-top:80px}
+}
+@media screen and (max-width:720px){
+  .nav-links{display:none}
+  .container{padding:0 20px}
+  section.sec{padding:72px 0}
+  .sec-head{margin-bottom:36px}
+  .hero{padding:118px 0 108px}
+}
+@media screen and (max-width:560px){
+  .feat-grid{grid-template-columns:1fr}
+  .btn-row .btn-primary,.btn-row .btn-ghost{width:100%;justify-content:center}
+  section.sec{padding:60px 0}
+  .sec-head{margin-bottom:28px}
+  .trust{flex-direction:column;align-items:center;justify-content:center;gap:12px}
+  .hero h2{font-size:clamp(13px,4.4vw,17px);line-height:1.65}
+  table.table th,table.table td{padding:10px 8px;font-size:12.5px}
+  table.table th:first-child{width:48%}
+  table.table td .keys{gap:2px}
+  kbd.k{font-size:10px;padding:2px 4px;min-width:18px;border-bottom-width:2px;border-radius:5px}
+  .keys i{font-size:9.5px;margin:0 1px}
+}
+
+/* ========== 动效偏好与打印 ========== */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .hero-copy>*,.win{animation:none!important;opacity:1!important;stroke-dashoffset:0!important;transform:none}
+  html.js .rv{opacity:1!important;transform:none!important;transition:none!important}
+}
+@media print{
+  .nav{display:none}
+  body{background:#fff}
+  .hero,.cta{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .hero-copy>*,.win{animation:none!important;opacity:1!important;stroke-dashoffset:0!important}
+  section.sec{padding:40px 0}
+}
+</style>
+</head>
+<body class="mode-deck" data-palette="ink-blue">
+
+<!-- ================= 导航 ================= -->
+<nav class="nav" aria-label="主导航">
+  <div class="container">
+    <a class="brand" href="#top" aria-label="喵呜导图 首页">
+      <img src="images/logo.png" alt="">
+      喵呜导图
+    </a>
+    <div class="nav-links">
+      <a href="#features">功能特性</a>
+      <a href="#scenarios">使用场景</a>
+      <a href="#shortcuts">快捷按键</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ================= Hero ================= -->
+<header class="hero" id="top">
+  <div class="container">
+    <div class="hero-copy">
+      <h1>喵呜导图 · MeowMind</h1>
+      <h2>&nbsp;&nbsp;&nbsp;&nbsp;——&nbsp;让思绪<span class="hl">更加清晰</span>，让灵感<span class="hl">长出枝丫</span></h2>
+      <p class="hero-sub">一款主打「轻・巧・快」的思维导图工具。它操作简单，轻盈灵活，聚焦核心功能，可快速绘制出美观、易读的思维导图。</p>
+      <div class="btn-row" data-layout="row">
+        <a class="btn-primary" href="release/喵呜导图.exe" download>
+          <b>立即下载（window便携版）</b>
+          <i>[版本] v2.8.0 · [大小] 3.1 MB</i>
+        </a>
+        <a class="btn-ghost" href="#features">
+          先看看它能做什么
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14m0 0-5-5m5 5 5-5"/></svg>
+        </a>
+      </div>
+      <div class="trust" aria-label="核心承诺">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 12.5 5 5 10-11"/></svg>免安装 · 双击即用</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 12.5 5 5 10-11"/></svg>免注册 · 无需会员</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 12.5 5 5 10-11"/></svg>免购买 · 永久免费</span>
+      </div>
+    </div>
+
+    <!-- 签名元素：软件界面截图 -->
+    <figure class="shot">
+      <img class="win" src="images/截图.jpg" alt="喵呜导图软件界面截图" style="width:100%;display:block;height:auto">
+    </figure>
+  </div>
+</header>
+
+<!-- ================= 功能特性 ================= -->
+<section class="sec" id="features">
+  <div class="container">
+    <div class="sec-head rv">
+      <span class="eyebrow">功能特性</span>
+      <h2 class="heading" data-level="1">轻若鸿毛，疾如闪电</h2>
+      <p class="paragraph">界面简洁，轻盈易用，每一个丝滑的操作体验，都来自真实场景中的精心打磨。</p>
+    </div>
+    <div class="feat-grid" data-cols="4">
+      <div class="card rv" style="--rd:.06s">
+        <span class="f-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 5h16M4 19h16"/><rect x="8" y="9.5" width="8" height="5" rx="1.5"/><path d="M6 12H4.5M19.5 12H18"/></svg></span>
+        <h3>自动排版</h3>
+        <p>你只管内容，它智能对齐。松手那一刻，画布已经自动整理好美观的节点布局。</p>
+      </div>
+      <div class="card rv" style="--rd:.06s">
+        <span class="f-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/><path d="M6 19h12"/></svg></span>
+        <h3>节点折叠</h3>
+        <p>节点较多时，按下<span class="f-keys"><kbd>Ctrl+/</kbd></span>，可折叠暂时不关注的节点树，让界面更清爽，让注意力更聚焦。</p>
+        
+      </div>
+      <div class="card rv" style="--rd:.12s">
+        <span class="f-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8l6-6V5a2 2 0 0 0-2-2z"/><path d="M14 21v-5a2 2 0 0 1 2-2h5"/></svg></span>
+        <h3>备注功能</h3>
+        <p>既保持导图结构，又强大而贴心：感悟、摘录、备忘…统统可以装进节点"备注"里。</p>
+      </div>
+      <div class="card rv">
+        <span class="f-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><path d="m6 16.5 4-4.5 3 3.5 2.5-3 3.5 4"/><circle cx="15.5" cy="9" r="1.3"/></svg></span>
+        <h3>一键导出</h3>
+        <p>快速导出PNG / PDF文件，直接贴进周报、课件、聊天框中；也可指定纸张大小打印装订，形成纸质资料。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 使用场景 ================= -->
+<section class="sec" id="scenarios">
+  <div class="container">
+    <div class="sec-head rv">
+      <span class="eyebrow">使用场景</span>
+      <h2 class="heading" data-level="1">经典需求，它的主场</h2>
+      <p class="paragraph">如果你经常需要把会议纪要、项目规划、学习笔记等整理成结构图，又不想被收费软件的账号体系和复杂模板束缚，它就是你最佳的选择。</p>
+    </div>
+    <div class="sc-grid" data-cols="3">
+
+      <article class="card rv">
+        <div class="sc-map" aria-hidden="true">
+          <svg viewBox="0 0 340 118">
+            <path d="M84 59C108 59 115 26 139 26" fill="none" stroke="#2F6BFF" stroke-width="1.8"/>
+            <path d="M84 59H139" fill="none" stroke="#F5A623" stroke-width="1.8"/>
+            <path d="M84 59C108 59 115 92 139 92" fill="none" stroke="#2F6BFF" stroke-width="1.8"/>
+            <rect x="22" y="46" width="62" height="26" rx="8" fill="#2F6BFF"/>
+            <text x="53" y="63" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">议题</text>
+            <rect x="139" y="14" width="78" height="24" rx="12" fill="#fff" stroke="#2F6BFF" stroke-width="1.3"/>
+            <text x="178" y="30" text-anchor="middle" font-size="11.5" fill="#33445F">议题要点</text>
+            <rect x="139" y="46" width="78" height="24" rx="12" fill="#FFF7E8" stroke="#F5A623" stroke-width="1.3"/>
+            <text x="178" y="62" text-anchor="middle" font-size="11.5" fill="#33445F">待办事项</text>
+            <rect x="139" y="78" width="78" height="24" rx="12" fill="#fff" stroke="#2F6BFF" stroke-width="1.3"/>
+            <text x="178" y="94" text-anchor="middle" font-size="11.5" fill="#33445F">分工确认</text>
+            <text x="245" y="63" font-size="10.5" fill="#B9A97E" font-family="Cascadia Code,Consolas,monospace">Shift+Tab ↓</text>
+          </svg>
+        </div>
+        <div class="sc-body">
+          <h3><b>会议速记</b><span class="sc-bar">｜</span><span class="sc-tag">边听边长出来的《会议纪要》</span></h3>
+          <p class="paragraph">开会时，迅速录入要点，并创建条理清晰的层级结构。散会时导图即纪要，导出 PNG 直接贴进群里。</p>
+        </div>
+      </article>
+
+      <article class="card rv" style="--rd:.08s">
+        <div class="sc-map" aria-hidden="true">
+          <svg viewBox="0 0 340 118">
+            <path d="M84 59C108 59 115 26 139 26" fill="none" stroke="#2F6BFF" stroke-width="1.8"/>
+            <path d="M84 59C108 59 115 92 139 92" fill="none" stroke="#2F6BFF" stroke-width="1.8"/>
+            <path d="M84 59H240" fill="none" stroke="#E2B93B" stroke-width="1.8" stroke-dasharray="4 4"/>
+            <rect x="22" y="46" width="62" height="26" rx="8" fill="#2F6BFF"/>
+            <text x="53" y="63" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">一本书</text>
+            <rect x="139" y="14" width="78" height="24" rx="12" fill="#fff" stroke="#2F6BFF" stroke-width="1.3"/>
+            <text x="178" y="30" text-anchor="middle" font-size="11.5" fill="#33445F">第一章</text>
+            <rect x="139" y="78" width="78" height="24" rx="12" fill="#fff" stroke="#2F6BFF" stroke-width="1.3"/>
+            <text x="178" y="94" text-anchor="middle" font-size="11.5" fill="#33445F">第二章</text>
+            <rect x="240" y="46" width="72" height="26" rx="13" fill="#FFF7E8" stroke="#F5A623" stroke-width="1.3"/>
+            <rect x="248" y="53" width="11" height="11" rx="2.5" fill="#FFD98A" stroke="#E2A93C" stroke-width=".9"/>
+            <text x="288" y="63" text-anchor="middle" font-size="11.5" fill="#33445F">备注</text>
+          </svg>
+        </div>
+        <div class="sc-body">
+          <h3><b>读书笔记</b><span class="sc-bar">｜</span><span class="sc-tag">一本书折成一张纸</span></h3>
+          <p class="paragraph">章节要点放在节点文本中，摘录与心得写在备注里。翻到导图等于翻完全书，复习时一眼看清骨架，一目了然。</p>
+        </div>
+      </article>
+
+      <article class="card rv" style="--rd:.16s">
+        <div class="sc-map" aria-hidden="true">
+          <svg viewBox="0 0 340 118">
+            <path d="M74 94C100 94 106 68 112 68" fill="none" stroke="#17A398" stroke-width="1.8"/>
+            <path d="M188 68C202 68 196 42 206 42" fill="none" stroke="#5A8DFF" stroke-width="1.8"/>
+            <path d="M262 42C278 42 268 16 276 16" fill="none" stroke="#F5A623" stroke-width="1.8"/>
+            <rect x="14" y="82" width="60" height="24" rx="8" fill="#2F6BFF"/>
+            <text x="44" y="98" text-anchor="middle" font-size="11.5" font-weight="600" fill="#fff">目标</text>
+            <rect x="112" y="56" width="76" height="24" rx="12" fill="#fff" stroke="#17A398" stroke-width="1.3"/>
+            <text x="150" y="72" text-anchor="middle" font-size="11.5" fill="#33445F">里程碑</text>
+            <rect x="206" y="30" width="56" height="24" rx="12" fill="#fff" stroke="#5A8DFF" stroke-width="1.3"/>
+            <text x="234" y="46" text-anchor="middle" font-size="11.5" fill="#33445F">任务</text>
+            <rect x="276" y="4" width="60" height="24" rx="12" fill="#FFF7E8" stroke="#F5A623" stroke-width="1.3"/>
+            <text x="306" y="20" text-anchor="middle" font-size="11.5" fill="#33445F">负责人</text>
+          </svg>
+        </div>
+        <div class="sc-body">
+          <h3><b>项目拆解</b><span class="sc-bar">｜</span><span class="sc-tag">把大目标拆到能下手</span></h3>
+          <p class="paragraph">一个项目从[里程碑]拆到[任务]再到[负责人]，层级轻松拖拽、随时重组，方案评审时现场改给大家看。</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 快捷键 ================= -->
+<section class="sec" id="shortcuts">
+  <div class="container">
+    <div class="sec-head rv">
+      <span class="eyebrow">快捷键</span>
+      <h2 class="heading" data-level="1">键盘操作，流畅丝滑</h2>
+      <p class="paragraph">内置丰富的快捷键，键盘即可操作整个绘图工作流。熟练之后，画一张导图的速度接近你打字的思考速度。</p>
+    </div>
+    <div class="kbd-panel rv">
+      <table class="table" data-caption="喵呜导图快捷键一览">
+        <thead>
+          <tr><th>快捷键</th><th>功能说明</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="keys"><kbd class="k">Tab</kbd></span></td><td>为选中节点添加子节点</td></tr>
+          <tr><td><span class="keys"><kbd class="k">Shift</kbd><i>+</i><kbd class="k">Tab</kbd></span></td><td>根节点加左侧子节点/其它节点加兄弟节点</td></tr>
+          <tr><td><span class="keys"><kbd class="k">Del</kbd></span></td><td>删除选中节点及其子树</td></tr>
+          <tr><td><span class="keys"><kbd class="k">Enter</kbd><i>/</i><kbd class="k">F2</kbd></span></td><td>编辑选中节点文本</td></tr>
+          <tr><td><span class="keys"><kbd class="k">↑ ↓ ← →</kbd></span></td><td>方向键在节点树之间导航焦点</td></tr>
+          <tr><td><span class="keys"><kbd class="k">Ctrl</kbd><i>+</i><kbd class="k">C / X / V</kbd></span></td><td>复制/剪切/粘贴选中节点</td></tr>
+          <tr><td><span class="keys"><kbd class="k">Ctrl</kbd><i>+</i><kbd class="k">/</kbd></span></td><td>折叠/展开选中节点的子树</td></tr>
+          <tr><td><span class="keys"><kbd class="k">Ctrl</kbd><i>+</i><kbd class="k">~</kbd></span></td><td>折叠/展开属性面板</td></tr>
+          <tr><td><span class="keys"><kbd class="k">Ctrl</kbd><i>+</i><kbd class="k">Z</kbd></span></td><td>撤销上一步操作</td></tr>
+          <tr><td><span class="keys"><kbd class="k">Ctrl</kbd><i>+</i><kbd class="k">Y</kbd></span></td><td>重做刚才的撤销</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 尾页 CTA ================= -->
+<section class="title end_page cta" id="download">
+  <svg class="cta-cat" viewBox="0 0 34 34" aria-hidden="true"><path d="M8 13.5V7l5 3.6c2.6-1 5.4-1 8 0L26 7v6.5c2.3 2.2 3.5 4.9 3.5 7.5 0 5.5-4.9 9-12.5 9S4.5 26.5 4.5 21c0-2.6 1.2-5.3 3.5-7.5z" fill="#FFFFFF"/></svg>
+  <div class="container">
+    <h2>快速制作导图，从这一秒开始</h2>
+    <a class="btn-primary" href="release/喵呜导图.exe" download>
+      <b>立即下载（window便携版）</b>
+      <i>[版本] v2.8.0 · [大小] 3.1 MB</i>
+    </a>
+  </div>
+</section>
+
+<!-- ================= Footer ================= -->
+<footer class="site-foot">
+  <div class="f-brand">
+    <img src="images/logo.png" alt="喵呜导图 Logo">
+    喵呜导图
+  </div>
+  <p>让思绪更加清晰，让灵感长出枝丫</p>
+  <p class="f-meta">Copyright © 2026 Mr-MAO</p>
+</footer>
+
+<script>
+document.documentElement.classList.add('js');
+(function(){
+  var els=document.querySelectorAll('.rv');
+  if(!('IntersectionObserver' in window)){for(var i=0;i<els.length;i++){els[i].classList.add('in')}return}
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}});
+  },{threshold:.12,rootMargin:'0px 0px -6% 0px'});
+  for(var j=0;j<els.length;j++){io.observe(els[j])}
+})();
+</script>
+</body>
 </html>
