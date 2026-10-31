@@ -1,0 +1,13 @@
+# 依赖与构建缓存
+node_modules/
+.parcel-cache/
+dist/
+
+# 日志
+*.log
+
+# 编辑器
+.idea/
+.vscode/
+*.sw?
+.DS_Store

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>喵呜导图 - 让你的想法像猫咪一样灵活跳跃</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  <ul className="mt-1.5 space-y-0.5">
+	<li className="flex items-center gap-2"><span className="inline-flex items-center justify-center rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono">Tab</span><span>添加子级节点</span>
+	</li>
+	<li className="flex items-center gap-2"><span className="inline-flex items-center justify-center rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono">Shift+Tab</span><span>添加同级节点 / 根节点左侧添加一级节点</span>
+	</li>
+	<li className="flex items-center gap-2"><span className="inline-flex items-center justify-center rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono">Enter</span><span>编辑文本</span>
+	</li>
+	<li className="flex items-center gap-2"><span className="inline-flex items-center justify-center rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono">Del</span><span>删除选中节点</span>
+	</li>
+	<li className="flex items-center gap-2"><span className="inline-flex items-center justify-center rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono">↑ ↓ ← →</span><span>切换选中节点</span>
+	</li>
+	<li className="flex items-center gap-2"><span className="inline-flex items-center justify-center rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono">Ctrl+c/x/v</span><span>复制/剪切/粘贴</span>
+	</li>
+	<li className="flex items-center gap-2"><span className="inline-flex items-center justify-center rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono">Ctrl+z</span><span>撤销</span>   <span className="inline-flex items-center justify-center ml-5 rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono">Ctrl+y</span><span>重做</span>
+	</li>
+	<li className="flex items-center gap-2"><span className="inline-flex items-center justify-center rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono">滚轮</span><span>缩放画布</span>
+	</li>
+	<li className="flex items-center gap-2"><span className="inline-flex items-center justify-center rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono">左键</span><span>选中、移动单个节点</span>
+	</li>
+	<li className="flex items-center gap-2"><span className="inline-flex items-center justify-center rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono">画布按下中键</span><span>移动画布</span>
+	</li>
+	<li className="flex items-center gap-2"><span className="inline-flex items-center justify-center rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono">节点按下中键</span><span>拖动节点及其后代</span>
+	</li>
+	<li className="flex items-center gap-2"><span className="inline-flex items-center justify-center rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono border border-border">100%</span><span>双击缩放比例框，恢复画布比例</span>
+	</li>
+  </ul>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
