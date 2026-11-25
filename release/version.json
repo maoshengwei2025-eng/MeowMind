@@ -1,6 +1,6 @@
 {
-  "version": "3.0.1.0",
-  "date": "2026-11-17",
+  "version": "3.1.0.0",
+  "date": "2026-11-25",
   "url": "https://raw.githubusercontent.com/maoshengwei2025-eng/MeowMind/main/release/%E5%96%B5%E5%91%9C%E5%AF%BC%E5%9B%BE.exe",
-  "description": "1. 修复根节点编辑文本时影响左侧节点树的bug；\r\n2. 增加了“预设导图样式”功能；\r\n3. 美化了自动更新程序的界面。"
+  "description": "1. 增加了Ai功能，现在一句话就可以生成导图了；\r\n2. 优化了⌈属性面板⌋内容布局；\r\n3. 改进了若干细节。"
 }
